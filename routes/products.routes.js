@@ -1,73 +1,24 @@
 const express = require('express');
 const router = express.Router();
-const ObjectId = require('mongodb').ObjectId;
+const {
+  getAll,
+  getRandom,
+  getItem,
+  postItem,
+  putItem,
+  deleteItem,
+} = require('../controllers/products.controller');
 
-router.get('/products', (req, res) => {
-  req.db.collection('products').find().toArray((err, data) => {
-    if (err) {
-      res.status(500).json({ message: err });
-    } else {
-      res.json(data);
-    }
-  });
-});
+router.get('/products', getAll);
 
-router.get('/products/random', (req, res) => {
-  req.db.collection('products').aggregate([{ $sample: { size: 1 } }]).toArray((err, data) => {
-    if (err) {
-      res.status(500).json({ message: err });
-    } else {
-      res.json(data[0]);
-    }
-  });
-});
+router.get('/products/random', getRandom);
 
-router.get('/products/:id', (req, res) => {
-  req.db.collection('products').findOne({ _id: ObjectId(req.params.id) }, (err, data) => {
-    if (err) {
-      res.status(500).json({ message: err });
-    } else if (!data) {
-      res.status(404).json({ message: 'Not found' });
-    } else {
-      res.json(data);
-    }
-  });
-});
+router.get('/products/:id', getItem);
 
-router.post('/products', (req, res) => {
-  const { name, client } = req.body;
-  req.db.collection('products').insertOne({ name: name, client: client }, (err) => {
-    if (err) {
-      res.status(500).json({ message: err });
-    } else {
-      res.json({ message: 'OK' });
-    }
-  });
-});
+router.post('/products', postItem);
 
-router.put('/products/:id', (req, res) => {
-  const { name, client } = req.body;
-  req.db.collection('products').updateOne(
-    { _id: ObjectId(req.params.id) },
-    { $set: { name: name, client: client } },
-    (err) => {
-      if (err) {
-        res.status(500).json({ message: err });
-      } else {
-        res.json({ message: 'OK' });
-      }
-    }
-  );
-});
+router.put('/products/:id', putItem);
 
-router.delete('/products/:id', (req, res) => {
-  req.db.collection('products').deleteOne({ _id: ObjectId(req.params.id) }, (err) => {
-    if (err) {
-      res.status(500).json({ message: err });
-    } else {
-      res.json({ message: 'OK ' });
-    }
-  });
-});
+router.delete('/products/:id', deleteItem);
 
 module.exports = router;
