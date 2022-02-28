@@ -3,9 +3,6 @@ const mongoose = require('mongoose');
 const Employee = require('../employees.model.js');
 
 describe('Employee', () => {
-    after(() => {
-        mongoose.models = {};
-    });
 
     it('should throw an error if is no of arg "firstName", "lastName", "department" ', () => {
         const cases = [
@@ -58,7 +55,7 @@ describe('Employee', () => {
     if (
         ('should throw an error if "lastName" is not a string',
             () => {
-                const cases = [{}, []];
+                const cases = [{}, [], 10, 10.1, Boolean];
                 for (let lastName of cases) {
                     const emp = new Employee({
                         firstName: 'John',
