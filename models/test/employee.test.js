@@ -38,7 +38,7 @@ describe('Employee', () => {
     });
 
     it('should throw an error if "firstName" is not a string', () => {
-        const cases = [{}, [], 10, 10.1, Boolean()];
+        const cases = [{}, [], 10, 10.1, true];
         for (let firstName of cases) {
             const emp = new Employee({
                 firstName,
